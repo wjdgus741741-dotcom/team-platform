@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>게임 팀원 모집 플랫폼</title>
+
+    <style>
+
+.notification-area{
+
+position:fixed;
+
+top:20px;
+
+right:20px;
+
+z-index:9999;
+
+}
+
+.notification{
+
+background:#5865f2;
+
+padding:15px;
+
+border-radius:10px;
+
+margin-bottom:10px;
+
+}
+
+/* ===== 알림 ===== */
+
+.notification-area{
+
+position:fixed;
+
+top:20px;
+
+right:20px;
+
+z-index:9999;
+
+}
+
+.notification{
+
+background:#5865f2;
+
+padding:15px;
+
+border-radius:10px;
+
+margin-bottom:10px;
+
+min-width:250px;
+
+box-shadow:0 0 10px rgba(0,0,0,.4);
+
+animation:slide .3s;
+
+}
+
+@keyframes slide{
+
+from{
+
+opacity:0;
+
+transform:translateX(100px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateX(0);
+
+}
+
+}
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background-color: #313338;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        /* 사이드바 */
+        .sidebar {
+            width: 260px;
+            background-color: #1e1f22;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 15px;
+            margin-top: 20px;
+        }
+
+        .room {
+            background-color: #2b2d31;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .room:hover {
+            background-color: #404249;
+        }
+
+        /* 채팅 영역 */
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            background-color: #1e1f22;
+            padding: 15px;
+            border-bottom: 1px solid #444;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .message {
+            background-color: #2b2d31;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .message b {
+            color: #58a6ff;
+        }
+
+        /* 친구 추가 */
+        .friend-add {
+            padding: 10px;
+            background-color: #2b2d31;
+            display: flex;
+        }
+
+        .friend-add input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background-color: #383a40;
+            color: white;
+            margin-right: 10px;
+        }
+
+        /* 음성 채팅 */
+        .voice-area {
+            padding: 10px;
+            background-color: #1e1f22;
+        }
+
+        /* 입력 영역 */
+        .input-area {
+            display: flex;
+            padding: 15px;
+            background-color: #1e1f22;
+        }
+
+        .input-area input,
+        .input-area select {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            margin-right: 10px;
+            background-color: #383a40;
+            color: white;
+        }
+
+        #username {
+            width: 180px;
+        }
+
+        #message {
+            flex: 1;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            background-color: #5865f2;
+            color: white;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #4752c4;
+        }
+
+        .party-create{
+
+margin-top:10px;
+
+padding:10px;
+
+background:#2b2d31;
+
+border-radius:10px;
+
+}
+
+.party-create input,
+.party-create select{
+
+width:100%;
+
+padding:10px;
+
+margin-top:10px;
+
+background:#383a40;
+
+border:none;
+
+border-radius:8px;
+
+color:white;
+
+}
+
+#partyList{
+
+margin-top:10px;
+
+}
+
+.party-card{
+
+background:#2b2d31;
+
+padding:10px;
+
+border-radius:10px;
+
+margin-top:10px;
+
+}
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- 사이드바 -->
+    <div class="sidebar">
+
+        <h2>게임 채널</h2>
+
+        <div class="room">
+            🎮 League of Legends
+        </div>
+
+        <div class="room">
+            🔫 Valorant
+        </div>
+
+        <div class="room">
+            ⚔️ Lost Ark
+        </div>
+
+        <div class="room">
+            🏆 PUBG
+        </div>
+
+        <h2>친구 목록</h2>
+
+        <div id="friendList"></div>
+
+        <h2>
+파티 모집
+</h2>
+
+<div class="party-create">
+
+<input
+type="text"
+id="partyTitle"
+placeholder=
+"예: 골드 정글 구함"
+>
+
+<select id="partyGame">
+
+<option>
+League of Legends
+</option>
+
+<option>
+Valorant
+</option>
+
+<option>
+PUBG
+</option>
+
+</select>
+
+<input
+type="number"
+id="partyMax"
+placeholder=
+"최대 인원"
+>
+
+<button
+onclick="createParty()"
+>
+
+파티 생성
+
+</button>
+
+</div>
+
+<div id="partyList">
+</div>
+
+    </div>
+
+    <!-- 채팅 영역 -->
+    <div class="chat-container">
+
+        <div class="chat-header">
+
+            <h2 id="roomTitle">
+                League of Legends
+            </h2>
+
+        </div>
+
+        <!-- 친구 추가 -->
+        <div class="friend-add">
+
+            <input
+                type="text"
+                id="friendName"
+                placeholder="친구 닉네임"
+            >
+
+            <button onclick="addFriend()">
+                친구추가
+            </button>
+
+        </div>
+
+        <!-- 음성채팅 -->
+        <div class="voice-area">
+
+            <button onclick="startVoice()">
+                🎤 음성채팅 시작
+            </button>
+
+        </div>
+
+        <!-- 메시지 -->
+        <div class="messages"
+             id="messages">
+        </div>
+
+        <!-- 입력 -->
+        <div class="input-area">
+
+            <input
+                type="text"
+                id="username"
+                placeholder="닉네임 입력"
+            >
+
+            <!-- 티어 -->
+            <select id="tier">
+
+                <option>
+                    🥉 Bronze
+                </option>
+
+                <option>
+                    🥈 Silver
+                </option>
+
+                <option>
+                    🥇 Gold
+                </option>
+
+                <option>
+                    💎 Platinum
+                </option>
+
+                <option>
+                    👑 Diamond
+                </option>
+
+                <option>
+                    🔥 Master
+                </option>
+
+            </select>
+
+            <input
+                type="text"
+                id="message"
+                placeholder="메시지 입력 (/dm 닉네임 내용)"
+            >
+
+            <button onclick="sendMessage()">
+                전송
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- Socket.IO -->
+    <script src="/socket.io/socket.io.js"></script>
+
+<script>
+
+const socket=io();
+
+function showNotification(msg){
+
+const area=
+document.getElementById(
+'notificationArea'
+);
+
+const div=
+document.createElement(
+'div'
+);
+
+div.className=
+'notification';
+
+div.innerHTML=
+'🔔 '+msg;
+
+area.appendChild(
+div
+);
+
+setTimeout(()=>{
+
+div.remove();
+
+},3000);
+
+}
+
+const messages=
+document.getElementById(
+'messages'
+);
+
+let currentRoom=
+'League of Legends';
+
+let myUsername='';
+
+let localStream;
+
+loadParty();
+
+function showNotification(msg){
+
+const area=
+document.getElementById(
+'notificationArea'
+);
+
+const div=
+document.createElement(
+'div'
+);
+
+div.className=
+'notification';
+
+div.innerHTML=
+'🔔 '+msg;
+
+area.appendChild(
+div
+);
+
+setTimeout(()=>{
+
+div.remove();
+
+},3000);
+
+}
+
+socket.emit(
+'joinRoom',
+currentRoom
+);
+
+// 채널 변경
+
+document
+.querySelectorAll(
+'.room'
+)
+
+.forEach(room=>{
+
+room.addEventListener(
+'click',
+()=>{
+
+currentRoom=
+room.innerText
+.replace('🎮 ','')
+.replace('🔫 ','')
+.replace('⚔️ ','')
+.replace('🏆 ','')
+.trim();
+
+document
+.getElementById(
+'roomTitle'
+)
+
+.innerText=
+currentRoom;
+
+messages.innerHTML='';
+
+socket.emit(
+'joinRoom',
+currentRoom
+);
+
+});
+
+});
+
+// 메시지
+
+function sendMessage(){
+
+const username=
+document
+.getElementById(
+'username'
+).value;
+
+const tier=
+document
+.getElementById(
+'tier'
+).value;
+
+const message=
+document
+.getElementById(
+'message'
+).value;
+
+if(
+!username||
+!message
+){
+return;
+}
+
+if(!myUsername){
+
+myUsername=
+username;
+
+socket.emit(
+'registerUser',
+username
+);
+
+}
+
+if(
+message.startsWith(
+'/dm'
+)
+){
+
+const split=
+message.split(' ');
+
+const target=
+split[1];
+
+const dm=
+split
+.slice(2)
+.join(' ');
+
+socket.emit(
+'privateMessage',
+{
+
+from:username,
+
+target:target,
+
+message:dm
+
+}
+
+);
+
+showNotification(
+'DM 전송'
+);
+
+}else{
+
+socket.emit(
+'chatMessage',
+{
+
+username,
+tier,
+message,
+
+room:
+currentRoom
+
+}
+
+);
+
+}
+
+document
+.getElementById(
+'message'
+)
+
+.value='';
+
+}
+
+// 이전 채팅 불러오기
+
+socket.on(
+
+'loadMessages',
+
+(list)=>{
+
+messages.innerHTML='';
+
+list.forEach(
+(data)=>{
+
+const div=
+document.createElement(
+'div'
+);
+
+div.className=
+'message';
+
+div.innerHTML=`
+
+<b>
+
+[${data.room}]
+
+${data.tier}
+
+${data.username}
+
+</b>
+
+<br>
+
+${data.message}
+
+`;
+
+messages.appendChild(
+div
+);
+
+});
+
+messages.scrollTop=
+messages.scrollHeight;
+
+});
+
+// 채팅
+
+socket.on(
+'chatMessage',
+data=>{
+
+const div=
+document.createElement(
+'div'
+);
+
+div.className=
+'message';
+
+div.innerHTML=
+`
+<b>
+
+[${data.room}]
+
+${data.tier}
+
+${data.username}
+
+</b>
+
+<br>
+
+${data.message}
+
+`;
+
+messages.appendChild(
+div
+);
+
+messages.scrollTop=
+messages.scrollHeight;
+
+});
+
+// DM
+
+socket.on(
+'privateMessage',
+data=>{
+
+showNotification(
+'DM : '+
+data.from
+);
+
+showNotification(
+'DM : '+
+data.from
+);
+
+const div=
+document.createElement(
+'div'
+);
+
+div.className=
+'message';
+
+div.innerHTML=
+`
+
+<b style=
+"color:hotpink;">
+
+[DM]
+
+${data.from}
+
+</b>
+
+<br>
+
+${data.message}
+
+`;
+
+messages.appendChild(
+div
+);
+
+});
+
+// 친구
+
+function addFriend() {
+
+const target =
+
+document
+
+.getElementById(
+'friendName'
+)
+
+.value;
+
+if(
+!target||
+!myUsername
+){
+return;
+}
+
+socket.emit(
+
+'friendRequest',
+
+{
+
+from:
+myUsername,
+
+target:
+target
+
+}
+
+);
+
+alert(
+
+target+
+
+'에게 친구 요청 전송'
+
+);
+
+}
+
+
+
+socket.on(
+'friendRequest',
+data=>{
+
+showNotification(
+
+data.from+
+
+' 친구 요청'
+
+);
+
+const ok=
+confirm(
+
+data.from+
+
+'님의 친구 요청'
+
+);
+
+if(ok){
+
+socket.emit(
+
+'acceptFriend',
+
+{
+
+from:
+myUsername,
+
+target:
+data.from
+
+}
+
+);
+
+}
+
+});
+
+socket.on(
+'friendList',
+list=>{
+
+const friendList=
+document
+.getElementById(
+'friendList'
+);
+
+friendList.innerHTML='';
+
+list.forEach(
+friend=>{
+
+const div=
+document
+.createElement(
+'div'
+);
+
+div.className=
+'room';
+
+div.classList.add(
+'room'
+);
+
+div.innerText =
+
+'🟢 ' + friend;
+
+friendList.appendChild(
+div
+);
+
+});
+
+});
+
+// 음성
+
+async function startVoice(){
+
+try{
+
+localStream=
+await navigator
+.mediaDevices
+.getUserMedia({
+
+audio:true
+
+});
+
+showNotification(
+'마이크 연결'
+);
+
+}catch(e){
+
+alert(
+'권한 필요'
+);
+
+}
+
+}
+
+// 서버 알림
+
+socket.on(
+'notification',
+data=>{
+
+showNotification(
+data.message
+);
+
+});
+
+// 엔터
+
+document
+.getElementById(
+'message'
+)
+
+.addEventListener(
+'keydown',
+
+e=>{
+
+if(
+e.key===
+'Enter'
+){
+
+sendMessage();
+
+}
+
+}
+
+);
+
+// 파티
+
+setInterval(
+loadParty,
+3000
+);
+
+// 파티 목록
+
+function loadParty(){
+
+fetch('/party')
+
+.then(
+res=>res.json()
+)
+
+.then(data=>{
+
+const list=
+document.getElementById(
+'partyList'
+);
+
+list.innerHTML='';
+
+data.forEach(
+party=>{
+
+list.innerHTML += `
+
+<div class="party-card">
+
+<b>
+🎮 ${party.game}
+</b>
+
+<p>
+${party.title}
+</p>
+
+<p>
+${party.tier}
+</p>
+
+<p>
+
+👥
+
+${party.current_members}
+
+/
+
+${party.max_members}
+
+</p>
+
+<button
+onclick=
+"joinParty(${party.id})"
+>
+
+참가
+
+</button>
+
+<button
+onclick=
+"showMembers(${party.id})"
+>
+
+참가자 보기
+
+</button>
+
+<button
+onclick=
+"deleteParty(${party.id})"
+>
+
+🗑 삭제
+
+</button>
+
+</div>
+
+`;
+
+});
+
+});
+
+}
+
+// 생성
+
+function createParty(){
+
+const owner=
+document
+.getElementById(
+'username'
+).value;
+
+const game=
+document
+.getElementById(
+'partyGame'
+).value;
+
+const title=
+document
+.getElementById(
+'partyTitle'
+).value;
+
+const tier=
+document
+.getElementById(
+'tier'
+).value;
+
+const max=
+document
+.getElementById(
+'partyMax'
+).value;
+
+fetch(
+
+'/party/create',
+
+{
+
+method:'POST',
+
+headers:{
+
+'Content-Type':
+'application/json'
+
+},
+
+body:
+JSON.stringify({
+
+owner,
+
+game,
+
+title,
+
+tier,
+
+max_members:max
+
+})
+
+}
+
+)
+
+.then(
+res=>res.text()
+)
+
+.then(msg=>{
+
+showNotification(
+'파티 생성'
+);
+
+alert(msg);
+
+loadParty();
+
+});
+
+}
+
+// 참가
+
+function joinParty(id){
+
+const username=
+document
+.getElementById(
+'username'
+).value;
+
+fetch(
+
+'/party/join',
+
+{
+
+method:'POST',
+
+headers:{
+
+'Content-Type':
+'application/json'
+
+},
+
+body:
+JSON.stringify({
+
+id,
+
+username
+
+})
+
+}
+
+)
+
+.then(
+res=>res.text()
+)
+
+.then(msg=>{
+
+alert(msg);
+
+loadParty();
+
+});
+
+}
+
+// 참가자 보기
+
+function showMembers(id){
+
+fetch(
+
+'/party/member/'+id
+
+)
+
+.then(
+res=>res.json()
+)
+
+.then(data=>{
+
+console.log(
+data
+);
+
+if(
+data.length===0
+){
+
+alert(
+'참가자 없음'
+);
+
+return;
+
+}
+
+let text=
+'참가자\n\n';
+
+data.forEach(
+member=>{
+
+text +=
+
+member.username+
+
+'\n';
+
+});
+
+alert(
+text
+);
+
+})
+
+.catch(err=>{
+
+console.log(
+err
+);
+
+alert(
+'조회 실패'
+);
+
+});
+
+}
+
+// 삭제
+
+function deleteParty(id){
+
+console.log(
+'삭제 눌림:',
+id
+);
+
+const ok=
+confirm(
+'삭제할까요?'
+);
+
+if(!ok){
+return;
+}
+
+fetch(
+
+'/party/delete',
+
+{
+
+method:'POST',
+
+headers:{
+
+'Content-Type':
+'application/json'
+
+},
+
+body:
+JSON.stringify({
+
+id:id
+
+})
+
+}
+
+)
+
+.then(
+res=>res.text()
+)
+
+.then(msg=>{
+
+alert(msg);
+
+loadParty();
+
+});
+
+}
+
+// 친구 삭제
+
+
+</script>
+
+<div id="notificationArea"
+class="notification-area">
+</div>
+
+</body>
+
+</html>
