@@ -11,6 +11,14 @@ router.post('/party/create', (req, res) => {
     } = req.body;
 
     const id = Math.floor(Math.random() * 1000000);
+
+    console.log('파티 생성 요청:', {
+    id,
+    title,
+    game,
+    max
+});
+
     const sql = `
         INSERT INTO parties
         (id, title, game, max_members)
