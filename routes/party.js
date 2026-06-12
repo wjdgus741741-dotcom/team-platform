@@ -79,4 +79,26 @@ router.post('/party/delete', (req, res) => {
 
 });
 
+router.post('/party/join', (req, res) => {
+
+    const { id, username } = req.body;
+
+    console.log('참가 요청:', id, username);
+
+    db.query(
+        'UPDATE parties SET current_members = current_members + 1 WHERE id=?',
+        [id],
+        (err) => {
+
+            if (err) {
+                console.log(err);
+                return res.send('참가 실패');
+            }
+
+            res.send('참가 완료');
+        }
+    );
+
+});
+
 module.exports = router;
