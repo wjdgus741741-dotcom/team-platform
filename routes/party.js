@@ -10,8 +10,7 @@ router.post('/party/create', (req, res) => {
         max
     } = req.body;
 
-    const id = Date.now();
-
+    const id = Math.floor(Math.random() * 1000000);
     const sql = `
         INSERT INTO parties
         (id, title, game, max_members)
