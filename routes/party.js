@@ -101,4 +101,24 @@ router.post('/party/join', (req, res) => {
 
 });
 
+router.get('/party/member/:id', (req, res) => {
+
+    const id = req.params.id;
+
+    db.query(
+        'SELECT * FROM parties WHERE id=?',
+        [id],
+        (err, result) => {
+
+            if (err) {
+                console.log(err);
+                return res.send('조회 실패');
+            }
+
+            res.json(result);
+        }
+    );
+
+});
+
 module.exports = router;
