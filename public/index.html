@@ -273,6 +273,52 @@ margin-top:10px;
 
 <body>
 
+    <div style="
+padding:15px;
+background:#1e1f22;
+border-bottom:1px solid #444;
+">
+
+<h3>회원가입</h3>
+
+<input
+type="text"
+id="regUsername"
+placeholder="아이디"
+>
+
+<input
+type="password"
+id="regPassword"
+placeholder="비밀번호"
+>
+
+<button onclick="register()">
+회원가입
+</button>
+
+<hr style="margin:10px 0;">
+
+<h3>로그인</h3>
+
+<input
+type="text"
+id="loginUsername"
+placeholder="아이디"
+>
+
+<input
+type="password"
+id="loginPassword"
+placeholder="비밀번호"
+>
+
+<button onclick="login()">
+로그인
+</button>
+
+</div>
+
     <!-- 사이드바 -->
     <div class="sidebar">
 
@@ -1365,6 +1411,125 @@ loadParty();
 }
 
 // 친구 삭제
+
+// 회원가입
+
+function register(){
+
+    const username =
+    document.getElementById(
+        'regUsername'
+    ).value;
+
+    const password =
+    document.getElementById(
+        'regPassword'
+    ).value;
+
+    fetch('/register',{
+
+        method:'POST',
+
+        headers:{
+            'Content-Type':
+            'application/json'
+        },
+
+        body:JSON.stringify({
+
+            username,
+            password
+
+        })
+
+    })
+
+    .then(res=>res.text())
+
+    .then(msg=>{
+
+        alert(msg);
+
+    })
+
+    .catch(err=>{
+
+        console.log(err);
+
+        alert('회원가입 실패');
+
+    });
+
+}
+
+
+
+// 로그인
+
+function login(){
+
+    const username =
+    document.getElementById(
+        'loginUsername'
+    ).value;
+
+    const password =
+    document.getElementById(
+        'loginPassword'
+    ).value;
+
+    fetch('/login',{
+
+        method:'POST',
+
+        headers:{
+            'Content-Type':
+            'application/json'
+        },
+
+        body:JSON.stringify({
+
+            username,
+            password
+
+        })
+
+    })
+
+    .then(res=>res.json())
+
+    .then(data=>{
+
+        if(data.token){
+
+            localStorage.setItem(
+                'token',
+                data.token
+            );
+
+            alert(
+                '로그인 성공'
+            );
+
+        }else{
+
+            alert(
+                JSON.stringify(data)
+            );
+
+        }
+
+    })
+
+    .catch(err=>{
+
+        console.log(err);
+
+        alert('로그인 실패');
+
+    });
+
+}
 
 
 </script>
