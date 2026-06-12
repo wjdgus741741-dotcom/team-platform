@@ -8,8 +8,8 @@ const { Server } = require('socket.io');
 
 const cors = require('cors');
 
-const authRouter =
-require('./routes/auth');
+//const authRouter =
+//require('./routes/auth');
 
 const postRouter =
 require('./routes/post');
@@ -54,10 +54,10 @@ express.static(
 )
 );
 
-app.use(
-'/',
-authRouter
-);
+//app.use(
+//'/',
+//authRouter
+//);
 
 app.use(
 '/',
