@@ -57,4 +57,26 @@ router.get('/party', (req, res) => {
 
 });
 
+router.post('/party/delete', (req, res) => {
+
+    const { id } = req.body;
+
+    console.log('삭제 요청:', id);
+
+    db.query(
+        'DELETE FROM parties WHERE id=?',
+        [id],
+        (err, result) => {
+
+            if (err) {
+                console.log(err);
+                return res.send('삭제 실패');
+            }
+
+            res.send('삭제 완료');
+        }
+    );
+
+});
+
 module.exports = router;
