@@ -40,4 +40,21 @@ router.post('/party/create', (req, res) => {
     );
 });
 
+router.get('/party', (req, res) => {
+
+    db.query(
+        'SELECT * FROM parties',
+        (err, result) => {
+
+            if (err) {
+                console.log(err);
+                return res.json([]);
+            }
+
+            res.json(result);
+        }
+    );
+
+});
+
 module.exports = router;
