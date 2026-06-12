@@ -1,91 +1,34 @@
 const express = require('express');
-
 const router = express.Router();
-
 const db = require('../config/db');
 
-router.post(
+router.post('/party/create', (req, res) => {
 
-'/friend/delete',
+    const {
+        title,
+        game,
+        max
+    } = req.body;
 
-(req,res)=>{
+    const sql = `
+        INSERT INTO parties
+        (title, game, max_members)
+        VALUES (?, ?, ?)
+    `;
 
-console.log(
-req.body
-);
+    db.query(
+        sql,
+        [title, game, max],
+        (err) => {
 
-const {
+            if (err) {
+                console.log(err);
+                return res.send('파티 생성 실패');
+            }
 
-user,
-
-target
-
-} = req.body || {};
-
-db.query(
-
-`
-
-DELETE FROM friends
-
-WHERE
-
-(
-
-user1=?
-
-AND user2=?
-
-)
-
-OR
-
-(
-
-user1=?
-
-AND user2=?
-
-)
-
-`,
-
-[
-
-user,
-
-target,
-
-target,
-
-user
-
-],
-
-(err,result)=>{
-
-if(err){
-
-console.log(
-err
-);
-
-return res.send(
-'삭제 실패'
-);
-
-}
-
-res.send(
-'친구 삭제 완료'
-);
-
-}
-
-);
-
-}
-
-);
+            res.send('파티 생성 성공');
+        }
+    );
+});
 
 module.exports = router;
