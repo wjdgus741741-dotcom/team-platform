@@ -10,15 +10,17 @@ router.post('/party/create', (req, res) => {
         max
     } = req.body;
 
+    const id = Date.now();
+
     const sql = `
         INSERT INTO parties
-        (title, game, max_members)
-        VALUES (?, ?, ?)
+        (id, title, game, max_members)
+        VALUES (?, ?, ?, ?)
     `;
 
     db.query(
         sql,
-        [title, game, max],
+        [id, title, game, max],
         (err) => {
 
             if (err) {
